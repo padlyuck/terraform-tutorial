@@ -2,7 +2,7 @@ terraform {
   required_version = ">=1.6, <1.7"
 }
 data "template_file" "user_data" {
-  filename = "resources/user-data.sh"
+  template = file("${path.module}/resources/user-data.sh")
   vars = {
     server_http_port = var.server_http_port
   }
@@ -42,8 +42,7 @@ resource "aws_autoscaling_group" "_" {
   launch_configuration = aws_launch_configuration.example.name
   vpc_zone_identifier  = data.aws_subnets.default.ids
   max_size             = 10
-  min_size             = 0
-  desired_capacity = 0
+  min_size             = 1
   tag {
     key                 = "Name"
     propagate_at_launch = true

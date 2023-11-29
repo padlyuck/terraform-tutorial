@@ -5,7 +5,6 @@ terraform {
   }
 }
 
-#@TODO Do these settings will be applied to s3 module provider?
 variable "access_key" { type = string }
 variable "secret_key" { type = string }
 variable "region" { type = string }
@@ -21,4 +20,14 @@ module "s3" {
   source = "../global/s3"
   state_bucket_prefix = var.state_bucket_prefix
   state_lock_table = var.state_lock_table
+}
+
+variable "server_http_port" { type = number }
+module "webserver-cluster" {
+  source           = "./services/webserver-cluster"
+  server_http_port = var.server_http_port
+}
+
+output "alb_dns_name" {
+  value = module.webserver-cluster.alb_dns_name
 }
